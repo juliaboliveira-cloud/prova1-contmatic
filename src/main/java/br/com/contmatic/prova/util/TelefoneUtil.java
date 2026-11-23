@@ -1,32 +1,27 @@
 package br.com.contmatic.prova.util;
 
-import br.com.contmatic.prova.constantes.TelefoneConstantes;
+import static br.com.contmatic.prova.constantes.TelefoneConstantes.TAMANHO_DDD;
+import static br.com.contmatic.prova.constantes.TelefoneConstantes.TAMANHO_TELEFONE;
+import static br.com.contmatic.prova.util.ValidacaoUtils.isBlank;
+import static br.com.contmatic.prova.util.ValidacaoUtils.isNull;
+import static br.com.contmatic.prova.util.ValidacaoUtils.validarTamanho;
 
 public class TelefoneUtil {
 	
+	private static final String DDD = "ddd";
+	private static final String TELEFONE = "telefone";
+
 	private TelefoneUtil() {}
 
-	public static boolean telefoneValido(String telefone) {
-		if (telefone == null) {
-			throw new IllegalArgumentException(TelefoneConstantes.MENSAGEM_ERRO_TELEFONE);
-		}
-		
-		if (telefone.length() < TelefoneConstantes.TAMANHO_TELEFONE) {
-			throw new IllegalArgumentException(TelefoneConstantes.MENSAGEM_TELEFONE_COM_OITO_DIGITOS_OU_MAIS);
-		}
-		
-		return true;
+	public static void validarTelefone(String campo, String telefone) {
+		isNull(campo, telefone);
+		isBlank(campo, telefone);
+		validarTamanho(TELEFONE, telefone, TAMANHO_TELEFONE);
 	}
 	
-	public static boolean dddValido(String ddd) {
-		if (ddd == null) {
-			throw new IllegalArgumentException(TelefoneConstantes.MENSAGEM_ERRO_DDD);
-		}
-		
-		if (ddd.length() != TelefoneConstantes.TAMANHO_DDD) {
-			throw new IllegalArgumentException(TelefoneConstantes.MENSAGEM_DDD_COM_DOIS_DIGITOS);
-		}
-		
-		return true;
+	public static void validarDdd(String campo, String ddd) {
+		isNull(campo, ddd);
+		isBlank(campo, ddd);
+		validarTamanho(DDD, ddd, TAMANHO_DDD);
 	}
 }

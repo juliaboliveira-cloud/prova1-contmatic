@@ -14,4 +14,20 @@ public final class EnderecoConstantes {
 	public static final Integer TAMANHO_MAXIMO_ENDERECO = 100;
 	public static final Integer TAMANHO_MINIMO_ENDERECO = 5;
 	public static final Integer TAMANHO_CEP = 8;
+	
+
+	public static final String UF = "uf";
+	public static final String CIDADE = "cidade";
+	public static final String BAIRRO = "bairro";
+	public static final String RUA = "rua";
+	public static final String NUMERO = "Numero";
+	
+	public static final String UF_TO_STRING = ", UF = ";
+	public static final String CIDADE_TO_STRING = ", Cidade = ";
+	public static final String BAIRRO_TO_STRING = ", Bairro = ";
+	public static final String CEP_TO_STRING = ", CEP = ";
+	public static final String COMPLEMENTO_TO_STRING = ", Complemento = ";
+	public static final String NUMERO_TO_STRING = ", Número = ";
+	public static final String RUA_TO_STRING = "Rua = ";
+	public static final String ENDERECO_TO_STRING = "Endereço: ";
 }

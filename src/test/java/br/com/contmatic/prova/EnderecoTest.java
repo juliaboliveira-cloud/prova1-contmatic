@@ -1,12 +1,15 @@
 package br.com.contmatic.prova;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.hamcrest.Matchers.is;
-
+import br.com.contmatic.prova.model.Empresa;
 import br.com.contmatic.prova.model.Endereco;
 
 public class EnderecoTest {
@@ -31,13 +34,13 @@ public class EnderecoTest {
 	
 	@Test
 	void deve_guardar_o_numero_informado() {
-		endereco.setNumero(49);
-		assertThat(endereco.getNumero(), is(49));
+		endereco.setNumeroEndereco(49);
+		assertThat(endereco.getNumeroEndereco(), is(49));
 	}
 	
 	@Test
 	void nao_deve_aceitar_numero_em_branco() {
-		assertThrows(IllegalArgumentException.class, () -> endereco.setNumero(null));
+		assertThrows(IllegalArgumentException.class, () -> endereco.setNumeroEndereco(null));
 	}
 	
 	@Test
@@ -55,6 +58,11 @@ public class EnderecoTest {
 	@Test
 	void nao_deve_aceitar_cep_em_branco() {
 		assertThrows(IllegalArgumentException.class, () -> endereco.setCep("  "));
+	}
+	
+	@Test
+	void nao_deve_aceitar_cep_nulo() {
+		assertThrows(IllegalArgumentException.class, () -> endereco.setCep(null));
 	}
 	
 	@Test
@@ -95,24 +103,79 @@ public class EnderecoTest {
 		Endereco a = new Endereco();
 		a.setCep("01503000");
 		a.setComplemento("Apto 1");
-		a.setNumero(100);
+		a.setNumeroEndereco(100);
 		
 		Endereco b = new Endereco();
 		b.setCep("01503000");
 		b.setComplemento("Apto 1");
-		b.setNumero(100);
+		b.setNumeroEndereco(100);
 		
+		assertThat(a.equals(null), is(false));
+		assertThat(a.equals(b), is(true));
 		assertThat(a.hashCode(), is(b.hashCode()));
 		
 		b.setCep("01503001");
 		assertThat(a.equals(b), is(false));
+		assertThat(a.hashCode(), is(not(b.hashCode())));
 		
 		b.setCep("01503000");
 		b.setComplemento("Apto2");
 		assertThat(a.equals(b), is(false));
 		
 		b.setComplemento("Apto 1");
-		b.setNumero(200);
+		b.setNumeroEndereco(200);
 		assertThat(a.equals(b), is(false));
 	}
+	
+	private void criarEnderecoTeste(Endereco endereco) {
+    	endereco.setRua("Rua de Teste");
+    	endereco.setNumeroEndereco(100);
+    	endereco.setComplemento("Apartamento 1");
+    	endereco.setCep("01001000");
+    	endereco.setBairro("Centro");
+    	endereco.setCidade("São Paulo");
+    	endereco.setUf("SP");
+    }
+	
+	@Test
+	void deve_ser_igual_a_ele_mesmo() {
+		Endereco enderecoTeste = new Endereco();
+		criarEnderecoTeste(enderecoTeste);
+		
+		assertThat(enderecoTeste.equals(enderecoTeste), is(true));
+	}
+	
+	@Test
+	void nao_deve_ser_nulo() {
+		Endereco enderecoTeste = new Endereco();
+		criarEnderecoTeste(enderecoTeste);
+		
+		assertThat(enderecoTeste.equals(null), is(false));
+	}
+	
+	@Test
+	void deve_preencher_o_to_string() {
+		Endereco endereco1 = new Endereco();
+		criarEnderecoTeste(endereco1);
+		
+		String texto = endereco1.toString();
+	
+		assertThat(texto, containsString("Rua de Teste"));
+		assertThat(texto, containsString("01001000"));
+		assertThat(texto, containsString("Centro"));
+	}
+	
+	@Test
+	void nao_deve_ser_igual_a_uma_empresa() {
+		Empresa empresa = new Empresa();
+		
+		assertThat(endereco.equals(empresa), is(false));
+	}
+	
+
+    @Test
+    void nao_deve_aceitar_numero_do_endereco_negativo() {
+    	assertThrows(IllegalArgumentException.class, () -> endereco.setNumeroEndereco(-100));
+    }
+    
 }

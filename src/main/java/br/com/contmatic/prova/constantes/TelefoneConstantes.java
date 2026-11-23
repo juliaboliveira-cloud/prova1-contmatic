@@ -9,8 +9,11 @@ public class TelefoneConstantes {
 	public static final String MENSAGEM_ERRO_DDD = "O DDD inválido.";
 	public static final String MENSAGEM_DDD_COM_DOIS_DIGITOS = "O DDD deve ter dois dígitos.";
 	
-	public static final Integer TAMANHO_TELEFONE = 8;
+	public static final Integer TAMANHO_TELEFONE = 9;
 	public static final Integer TAMANHO_DDD = 2;
+	
+	public static final String DDD = "ddd";
+	public static final String TELEFONE = "telefone";
 
 	
 	

@@ -1,5 +1,6 @@
 package br.com.contmatic.prova;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -15,6 +16,7 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import br.com.contmatic.prova.model.Auditoria;
 import br.com.contmatic.prova.model.Empresa;
 import br.com.contmatic.prova.model.Endereco;
 import br.com.contmatic.prova.model.Telefone;
@@ -33,6 +35,7 @@ public class EmpresaTest {
         empresa.setRazaoSocial("Restaurante do Oliveira");
         assertThat(empresa.getRazaoSocial(), is("Restaurante do Oliveira"));
     }
+	
     @Test
     void nao_deve_aceitar_razao_social_em_branco() {
         assertThrows(IllegalArgumentException.class, () -> empresa.setRazaoSocial("  "));
@@ -40,12 +43,18 @@ public class EmpresaTest {
     
     @Test
     void deve_guardar_o_cnpj_informada() {
-        empresa.setCnpj("59597281000126");
-        assertThat(empresa.getCnpj(), is("59597281000126"));
+        empresa.setCnpj("97.817.503/0001-96");
+        assertThat(empresa.getCnpj(), is("97.817.503/0001-96"));
     }
+    
     @Test
     void nao_deve_aceitar_cnpj_em_branco() {
         assertThrows(IllegalArgumentException.class, () -> empresa.setCnpj("  "));
+    }
+    
+    @Test
+    void nao_deve_aceitar_cnpj_com_numeros_iguais() {
+    	assertThrows(IllegalArgumentException.class, () -> empresa.setCnpj("11111111111111"));
     }
     
     @Test
@@ -68,6 +77,11 @@ public class EmpresaTest {
     @Test
     void nao_deve_aceitar_capital_social_em_branco() {
         assertThrows(IllegalArgumentException.class, () -> empresa.setCapitalSocial(null));
+    }
+    
+    @Test
+    void nao_deve_aceitar_capital_social_zerado() {
+        assertThrows(IllegalArgumentException.class, () -> empresa.setCapitalSocial(BigDecimal.ZERO));
     }
     
     @Test
@@ -94,7 +108,7 @@ public class EmpresaTest {
     void deve_guardar_o_endereco_informado() {
     	Endereco endereco = new Endereco();
     	endereco.setRua("Rua Teste");
-    	endereco.setNumero(100);
+    	endereco.setNumeroEndereco(100);
     	endereco.setCep("01500300");
     	endereco.setBairro("Liberdade");
     	endereco.setCidade("São Paulo");
@@ -121,7 +135,7 @@ public class EmpresaTest {
     void deve_guardar_o_telefone_informad() {
     	Telefone telefone = new Telefone();
     	telefone.setDdd("11");
-    	telefone.setTelefone("965324147");
+    	telefone.setNumeroTelefone("965324147");
     	
     	Set<Telefone> telefones = new HashSet<>();
     	telefones.add(telefone);
@@ -143,18 +157,73 @@ public class EmpresaTest {
     @Test
     void deve_comparar_empresas_com_equals_e_hash_code() {
     	Empresa a = new Empresa();
-    	a.setCnpj("59597281000126");
+    	a.setCnpj("97.817.503/0001-96");
     	
     	Empresa b = new Empresa();
-    	b.setCnpj("59597281000126");
+    	b.setCnpj("97.817.503/0001-96");
     	
     	assertThat(a.equals(a), is(true));
     	assertThat(a.equals(null), is(false));
     	assertThat(a.equals(b), is(true));
     	assertThat(a.hashCode(), is(b.hashCode()));
     	
-    	b.setCnpj("59597281000130");
+    	b.setCnpj("89.739.389/0001-03");
     	assertThat(a.equals(b), is(false));
     	assertThat(a.hashCode(), is(not(b.hashCode())));
     }
+    
+    @Test
+    void deve_preencher_o_to_string() {
+    	Empresa empresaNova = new Empresa();
+    	preencherEmpresaTeste(empresaNova);
+    	
+    	String texto = empresaNova.toString();
+    	
+    	assertThat(texto, containsString("Padaria do Sonho"));
+    	assertThat(texto, containsString("Rua de Teste"));
+    	assertThat(texto, containsString("912345678"));
+    }
+    
+    private Endereco criarEndereco() {
+    	Endereco endereco = new Endereco();
+    	endereco.setRua("Rua de Teste");
+    	endereco.setNumeroEndereco(100);
+    	endereco.setComplemento("Apartamento 1");
+    	endereco.setCep("01001000");
+    	endereco.setBairro("Centro");
+    	endereco.setCidade("São Paulo");
+    	endereco.setUf("SP");
+    	return endereco;
+    }
+    
+    private Telefone criarTelefone() {
+    	Telefone telefone = new Telefone();
+    	telefone.setDdd("11");
+    	telefone.setNumeroTelefone("912345678");
+    	return telefone;
+    }
+    
+    private void preencherEmpresaTeste(Empresa empresa) {
+    	empresa.setAtiva(true);
+    	empresa.setCapitalSocial(new BigDecimal("1000.00"));
+    	empresa.setCnpj("97.817.503/0001-96");
+    	empresa.setDataDeAbertura(LocalDate.of(2020, 5, 11));
+    	empresa.setQuantidadeFuncionarios(5);
+    	empresa.setRazaoSocial("Padaria do Sonho");
+    	
+    	List<Endereco> enderecos = new ArrayList<>();
+    	enderecos.add(criarEndereco());
+    	empresa.setEnderecos(enderecos);
+    	
+    	Set<Telefone> telefones = new HashSet<>();
+    	telefones.add(criarTelefone());
+    	empresa.setTelefones(telefones);
+    }
+    
+    @Test
+	void nao_deve_ser_igual_a_uma_auditoria() {
+		Auditoria auditoria = new Auditoria();
+		
+		assertThat(empresa.equals(auditoria), is(false));
+	}
 }

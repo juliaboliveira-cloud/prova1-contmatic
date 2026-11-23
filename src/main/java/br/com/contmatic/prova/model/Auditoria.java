@@ -1,12 +1,23 @@
 package br.com.contmatic.prova.model;
 
+import static br.com.contmatic.prova.constantes.AuditoriaConstantes.GMT_SP;
+import static br.com.contmatic.prova.constantes.AuditoriaConstantes.MENSAGEM_DE_ERRO_DATA_HORA;
+import static br.com.contmatic.prova.util.AuditoriaUtil.validarDataHoraAlteracao;
+import static br.com.contmatic.prova.util.AuditoriaUtil.validarDataHoraCriacao;
+import static br.com.contmatic.prova.util.AuditoriaUtil.validarIpCriacao;
+import static br.com.contmatic.prova.util.AuditoriaUtil.validarOrdemDatas;
+import static br.com.contmatic.prova.util.AuditoriaUtil.validarUsuarioAlteracao;
+import static br.com.contmatic.prova.util.AuditoriaUtil.validarUsuarioCriacao;
+import static java.time.LocalDateTime.now;
+import static java.time.ZoneId.of;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import br.com.contmatic.prova.constantes.AuditoriaConstantes;
-import br.com.contmatic.prova.util.ValidacaoUtils;
+import br.com.contmatic.prova.util.AuditoriaUtil;
 
 public class Auditoria {
+
 
 	private String usuarioCriacao;
 	private String usuarioAlteracao;
@@ -20,7 +31,7 @@ public class Auditoria {
 	}
 
 	public void setUsuarioCriacao(String usuarioCriacao) {
-		ValidacaoUtils.validaEmpresa(usuarioCriacao, AuditoriaConstantes.MENSAGEM_DE_ERRO_USUARIO_INVALIDO);
+		validarUsuarioCriacao(usuarioCriacao);
 		this.usuarioCriacao = usuarioCriacao;
 	}
 
@@ -29,6 +40,7 @@ public class Auditoria {
 	}
 
 	public void setUsuarioAlteracao(String usuarioAlteracao) {
+		validarUsuarioAlteracao(usuarioAlteracao);
 		this.usuarioAlteracao = usuarioAlteracao;
 	}
 
@@ -37,7 +49,11 @@ public class Auditoria {
 	}
 
 	public void setDataHoraCriacao(LocalDateTime dataHoraCriacao) {
-		ValidacaoUtils.validaEmpresa(dataHoraCriacao, AuditoriaConstantes.MENSAGEM_DE_ERRO_DATA_HORA_CRIACAO);
+		validarDataHoraCriacao(dataHoraCriacao);
+		if (!dataHoraCriacao.equals(now(of(GMT_SP)))) {
+			throw new IllegalArgumentException(MENSAGEM_DE_ERRO_DATA_HORA);
+		}
+		
 		this.dataHoraCriacao = dataHoraCriacao;
 	}
 
@@ -46,6 +62,9 @@ public class Auditoria {
 	}
 
 	public void setDataHoraAlteracao(LocalDateTime dataHoraAlteracao) {
+		validarDataHoraAlteracao(dataHoraAlteracao);
+		validarOrdemDatas(dataHoraCriacao, dataHoraAlteracao);
+		
 		this.dataHoraAlteracao = dataHoraAlteracao;
 	}
 
@@ -54,7 +73,7 @@ public class Auditoria {
 	}
 
 	public void setIpCriacao(String ipCriacao) {
-		ValidacaoUtils.validaEmpresa(ipCriacao, AuditoriaConstantes.MENSAGEM_DE_ERRO_IP_INVALIDO);
+		validarIpCriacao(ipCriacao);
 		this.ipCriacao = ipCriacao;
 	}
 
@@ -63,6 +82,7 @@ public class Auditoria {
 	}
 
 	public void setIpAlteracao(String ipAlteracao) {
+		AuditoriaUtil.validarIpAlteracao(ipAlteracao);
 		this.ipAlteracao = ipAlteracao;
 	}
 	

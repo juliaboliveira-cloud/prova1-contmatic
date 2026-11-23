@@ -1,5 +1,13 @@
 package br.com.contmatic.prova.model;
 
+import static br.com.contmatic.prova.util.CnpjUtil.isValido;
+import static br.com.contmatic.prova.util.ValidacaoUtils.isBigDecimalGreaterThanZero;
+import static br.com.contmatic.prova.util.ValidacaoUtils.isBlank;
+import static br.com.contmatic.prova.util.ValidacaoUtils.isEmpty;
+import static br.com.contmatic.prova.util.ValidacaoUtils.isGreaterThanZero;
+import static br.com.contmatic.prova.util.ValidacaoUtils.isNull;
+import static java.lang.String.format;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -7,12 +15,10 @@ import java.util.Objects;
 import java.util.Set;
 
 import br.com.contmatic.prova.constantes.EmpresaConstantes;
-import br.com.contmatic.prova.util.CnpjUtil;
 import br.com.contmatic.prova.util.ValidacaoUtils;
 
 public class Empresa extends Auditoria {
 
-	
 	private String cnpj;
 	private String razaoSocial;
 	private Integer quantidadeFuncionarios;
@@ -27,7 +33,11 @@ public class Empresa extends Auditoria {
 	}
 
 	public void setCnpj(String cnpj) {
-		CnpjUtil.isValido(cnpj);
+		isBlank("CNPJ", cnpj);
+		isValido(cnpj);
+		if (!isValido(cnpj)) {
+			throw new IllegalArgumentException(format(EmpresaConstantes.CAMPO_INVALIDO, "CNPJ"));
+		}
 		this.cnpj = cnpj;
 	}
 
@@ -36,7 +46,7 @@ public class Empresa extends Auditoria {
 	}
 
 	public void setRazaoSocial(String razaoSocial) {
-		ValidacaoUtils.validaEmpresa(razaoSocial, EmpresaConstantes.MENSAGEM_DE_ERRO_RAZAO_SOCIAL);
+		isBlank("Razão Social" ,razaoSocial);
 		this.razaoSocial = razaoSocial;
 	}
 
@@ -45,7 +55,8 @@ public class Empresa extends Auditoria {
 	}
 
 	public void setQuantidadeFuncionarios(Integer quantidadeFuncionarios) {
-		ValidacaoUtils.validaEmpresa(quantidadeFuncionarios, EmpresaConstantes.MENSAGEM_DE_ERRO_QUANTIDADE_DE_FUNCIONARIOS);
+		ValidacaoUtils.isNull("Quantidade de Funcionarios", quantidadeFuncionarios);
+		isGreaterThanZero("Quantidade de Funcionarios", quantidadeFuncionarios);
 		this.quantidadeFuncionarios = quantidadeFuncionarios;
 	}
 
@@ -54,7 +65,8 @@ public class Empresa extends Auditoria {
 	}
 
 	public void setCapitalSocial(BigDecimal capitalSocial) {
-		ValidacaoUtils.validaEmpresa(capitalSocial, EmpresaConstantes.MENSAGEM_DE_ERRO_CAPITAL_SOCIAL);
+		isNull("Capital Social", capitalSocial);
+		isBigDecimalGreaterThanZero("Capital Social", capitalSocial);
 		this.capitalSocial = capitalSocial;
 	}
 
@@ -63,7 +75,7 @@ public class Empresa extends Auditoria {
 	}
 
 	public void setDataDeAbertura(LocalDate dataDeAbertura) {
-		ValidacaoUtils.validaEmpresa(dataDeAbertura, EmpresaConstantes.MENSAGEM_DE_ERRO_DATA_DE_ABERTURA);
+		isNull("Data de Abertura", dataDeAbertura);
 		this.dataDeAbertura = dataDeAbertura;
 	}
 
@@ -72,7 +84,7 @@ public class Empresa extends Auditoria {
 	}
 
 	public void setAtiva(Boolean ativa) {
-		ValidacaoUtils.validaEmpresa(ativa, EmpresaConstantes.MENSAGEM_DE_ERRO_SITUACAO_EMPRESA);
+		isNull("Empresa ativa", ativa);
 		this.ativa = ativa;
 	}
 
@@ -81,7 +93,7 @@ public class Empresa extends Auditoria {
 	}
 
 	public void setEnderecos(List<Endereco> enderecos) {
-		ValidacaoUtils.validaEmpresa(enderecos, EmpresaConstantes.MENSAGEM_DE_ERRO_ENDERECO_INCOMPLETO);
+		isEmpty(enderecos, "Endereco");
 		this.enderecos = enderecos;
 	}
 
@@ -90,7 +102,7 @@ public class Empresa extends Auditoria {
 	}
 
 	public void setTelefones(Set<Telefone> telefones) {
-		ValidacaoUtils.validaEmpresa(telefones, EmpresaConstantes.MENSAGEM_DE_ERRO_TELEFONE_INCOMPLETO);
+		isEmpty(telefones, "Telefone");
 		this.telefones = telefones;
 	}
 
@@ -122,7 +134,7 @@ public class Empresa extends Auditoria {
 				.append(EmpresaConstantes.SITUACAO).append(ativa)
 				.append(EmpresaConstantes.ENDERECOS).append(enderecos)
 				.append(EmpresaConstantes.TELEFONES).append(telefones)
-				.append(", " + super.toString())
+				.append(", ").append(super.toString())
 				.append("]")
 				.toString();
 	}

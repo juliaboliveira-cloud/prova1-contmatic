@@ -15,6 +15,7 @@ public final class EmpresaConstantes {
 	public static final String MENSAGEM_DE_ERRO_SITUACAO_EMPRESA = "O campo da Situação da Empresa dever ser preenchido.";
 	public static final String MENSAGEM_DE_ERRO_ENDERECO_INCOMPLETO = "O endereço deve estar preenchido corretamente.";
 	public static final String MENSAGEM_DE_ERRO_TELEFONE_INCOMPLETO = "O telefone deve ser preenchido corretamente.";
+	public static final String CAMPO_INVALIDO = "O campo %s está inválido, verifique a informação inserida.";
 	
 	public static final Integer TAMANHO_MAXIMO_RAZAO_SOCIAL= 100;
 	public static final Integer TAMANHO_MINIMO_RAZAO_SOCIAL= 5;
