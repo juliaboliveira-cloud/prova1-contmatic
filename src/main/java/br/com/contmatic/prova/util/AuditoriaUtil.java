@@ -5,13 +5,16 @@ import static br.com.contmatic.prova.constantes.AuditoriaConstantes.CAMPO_DATA_E
 import static br.com.contmatic.prova.constantes.AuditoriaConstantes.CAMPO_DATA_E_HORA_DE_CRIACAO;
 import static br.com.contmatic.prova.constantes.AuditoriaConstantes.CAMPO_USUARIO_ALTERACAO;
 import static br.com.contmatic.prova.constantes.AuditoriaConstantes.CAMPO_USUARIO_CRIACAO;
+import static br.com.contmatic.prova.constantes.AuditoriaConstantes.GMT_SP;
 import static br.com.contmatic.prova.constantes.AuditoriaConstantes.IP_FORMATO;
+import static br.com.contmatic.prova.constantes.AuditoriaConstantes.MENSAGEM_DE_ERRO_DATA_HORA;
 import static br.com.contmatic.prova.constantes.AuditoriaConstantes.MENSAGEM_DE_ERRO_IP_INVALIDO;
 import static br.com.contmatic.prova.constantes.AuditoriaConstantes.O_CAMPO_NAO_PODE_SER_ZERO;
 import static br.com.contmatic.prova.util.ValidacaoUtils.isBlank;
 import static br.com.contmatic.prova.util.ValidacaoUtils.isNull;
-import static br.com.contmatic.prova.util.ValidacaoUtils.validarCodigoIp;
 import static java.lang.String.format;
+import static java.time.LocalDateTime.now;
+import static java.time.ZoneId.of;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -41,6 +44,9 @@ public class AuditoriaUtil {
 	
 	public static void validarDataHoraCriacao(LocalDateTime dataHoraCriacao) {
 		isNull(CAMPO_DATA_E_HORA_DE_CRIACAO, dataHoraCriacao);
+		if (now(of(GMT_SP)).isBefore(dataHoraCriacao)) {
+			throw new IllegalArgumentException(MENSAGEM_DE_ERRO_DATA_HORA);
+		}
 	}
 	
 	public static void validarDataHoraAlteracao(LocalDateTime dataHoraAlteracao) {
@@ -60,10 +66,18 @@ public class AuditoriaUtil {
 	}
 	
 	public static void validarIp(String ip, String campo) {
-		if (!Objects.isNull(ip) && !ip.matches(IP_FORMATO)) {
+		if (Objects.isNull(ip) || !ip.matches(IP_FORMATO)) {
 			throw new IllegalArgumentException(format(O_CAMPO_NAO_PODE_SER_ZERO, campo));
 		}
 		validarCodigoIp(ip, CAMPO_CODIGO_IP);
+	}
+	
+	public static void validarCodigoIp(String ip, String campo) {
+		for (String numero : ip.split("\\.")) {
+			if (Integer.parseInt(numero) > 255) {
+				throw new IllegalArgumentException(format(O_CAMPO_NAO_PODE_SER_ZERO, campo));
+			}
+		}
 	}
 	
 	public static void validarOrdemDatas(LocalDateTime criacao, LocalDateTime alteracao) {

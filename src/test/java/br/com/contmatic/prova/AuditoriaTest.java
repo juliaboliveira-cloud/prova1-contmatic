@@ -1,14 +1,14 @@
 package br.com.contmatic.prova;
 
 import static br.com.contmatic.prova.constantes.AuditoriaConstantes.GMT_SP;
+import static java.time.LocalDateTime.now;
+import static java.time.ZoneId.of;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static java.time.LocalDateTime.now;
-import static java.time.ZoneId.of;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDateTime;
 
@@ -61,8 +61,8 @@ public class AuditoriaTest {
 	}
 	
 	@Test
-	void deve_recusar_data_e_hora_de_criacao_diferente() {
-		LocalDateTime dataHora = now(of(GMT_SP)).minusDays(1);
+	void deve_recusar_data_e_hora_de_criacao_posterior() {
+		LocalDateTime dataHora = now(of(GMT_SP)).plusDays(1);
 		assertThrows(IllegalArgumentException.class, () -> auditoria.setDataHoraCriacao(dataHora));
 	}
 	
@@ -170,11 +170,16 @@ public class AuditoriaTest {
 		assertThat(a.hashCode(), is(not(b.hashCode())));
 	}
 	
+	private void preencherAuditoriaTeste(Auditoria auditoria) {
+		auditoria.setUsuarioCriacao("julia");
+		auditoria.setDataHoraCriacao(now(of(GMT_SP)));
+		auditoria.setIpCriacao("192.168.0.1");
+	}
+	
 	@Test
 	void deve_validar_auditoria_empresa() {
 		Empresa empresa = new Empresa();
 		preencherAuditoriaTeste(empresa);
-		
 		
 		assertDoesNotThrow(() -> AuditoriaUtil.validar(empresa));
 	}
@@ -187,11 +192,6 @@ public class AuditoriaTest {
 		assertDoesNotThrow(() -> AuditoriaUtil.validar(telefone));
 	}
 	
-	private void preencherAuditoriaTeste(Auditoria auditoria) {
-		auditoria.setUsuarioCriacao("julia");
-		auditoria.setDataHoraCriacao(now(of(GMT_SP)));
-		auditoria.setIpCriacao("192.168.0.1");
-	}
 	
 	@Test
 	void deve_preencher_o_to_string() {

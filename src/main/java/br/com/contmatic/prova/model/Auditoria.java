@@ -1,15 +1,11 @@
 package br.com.contmatic.prova.model;
 
-import static br.com.contmatic.prova.constantes.AuditoriaConstantes.GMT_SP;
-import static br.com.contmatic.prova.constantes.AuditoriaConstantes.MENSAGEM_DE_ERRO_DATA_HORA;
 import static br.com.contmatic.prova.util.AuditoriaUtil.validarDataHoraAlteracao;
 import static br.com.contmatic.prova.util.AuditoriaUtil.validarDataHoraCriacao;
 import static br.com.contmatic.prova.util.AuditoriaUtil.validarIpCriacao;
 import static br.com.contmatic.prova.util.AuditoriaUtil.validarOrdemDatas;
 import static br.com.contmatic.prova.util.AuditoriaUtil.validarUsuarioAlteracao;
 import static br.com.contmatic.prova.util.AuditoriaUtil.validarUsuarioCriacao;
-import static java.time.LocalDateTime.now;
-import static java.time.ZoneId.of;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -50,10 +46,6 @@ public class Auditoria {
 
 	public void setDataHoraCriacao(LocalDateTime dataHoraCriacao) {
 		validarDataHoraCriacao(dataHoraCriacao);
-		if (!dataHoraCriacao.equals(now(of(GMT_SP)))) {
-			throw new IllegalArgumentException(MENSAGEM_DE_ERRO_DATA_HORA);
-		}
-		
 		this.dataHoraCriacao = dataHoraCriacao;
 	}
 

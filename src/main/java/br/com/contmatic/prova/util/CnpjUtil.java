@@ -20,6 +20,8 @@ public class CnpjUtil {
 	
 	public static boolean isValido(String cnpj) {
 		String cnpjSemFormatacao = retirarCaracteresEspeciais(cnpj);
+		
+		
 		return verificarTamanhoCnpj(cnpjSemFormatacao) && !verificarNumerosIguais(cnpjSemFormatacao) && validarDigitoVerificador(cnpjSemFormatacao);
 	}
 

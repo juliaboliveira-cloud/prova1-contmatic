@@ -53,14 +53,4 @@ public final class ValidacaoUtils {
 			throw new IllegalArgumentException(String.format(O_CONTEUDO_DO_CAMPO_DEVE_TER_TAMANHO_X, campo, tamanho));
 		}
 	}
-	
-	public static void validarCodigoIp(String ip, String campo) {
-		for (String numero : ip.split("\\.")) {
-			if (Integer.parseInt(numero) > 255) {
-				throw new IllegalArgumentException(format(O_CAMPO_NAO_PODE_SER_ZERO, campo));
-			}
-		}
-	}
-	
-	
 }
