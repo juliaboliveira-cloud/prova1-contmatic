@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import br.com.contmatic.prova.model.Empresa;
+import br.com.contmatic.prova.model.Auditoria;
 import br.com.contmatic.prova.model.Endereco;
 
 public class EnderecoTest {
@@ -44,6 +44,16 @@ public class EnderecoTest {
 	}
 	
 	@Test
+	void nao_deve_aceitar_numero_zero() {
+		assertThrows(IllegalArgumentException.class, () -> endereco.setNumeroEndereco(0));
+	}
+	
+	@Test
+	void nao_deve_aceitar_numero_negativo() {
+		assertThrows(IllegalArgumentException.class, () -> endereco.setNumeroEndereco(-5));
+	}
+	
+	@Test
 	void deve_guardar_o_complemento_informado() {
 		endereco.setComplemento("Apartamento 42");
 		assertThat(endereco.getComplemento(), is("Apartamento 42"));
@@ -63,6 +73,11 @@ public class EnderecoTest {
 	@Test
 	void nao_deve_aceitar_cep_nulo() {
 		assertThrows(IllegalArgumentException.class, () -> endereco.setCep(null));
+	}
+	
+	@Test
+	void nao_deve_aceitar_o_cep_com_menos_de_oito_digitos() {
+		assertThrows(IllegalArgumentException.class, () -> endereco.setCep("0150700"));
 	}
 	
 	@Test
@@ -165,17 +180,17 @@ public class EnderecoTest {
 		assertThat(texto, containsString("Centro"));
 	}
 	
-	@Test
-	void nao_deve_ser_igual_a_uma_empresa() {
-		Empresa empresa = new Empresa();
-		
-		assertThat(endereco.equals(empresa), is(false));
-	}
-	
 
     @Test
     void nao_deve_aceitar_numero_do_endereco_negativo() {
     	assertThrows(IllegalArgumentException.class, () -> endereco.setNumeroEndereco(-100));
     }
     
+    @Test
+    void nao_deve_ser_igual_a_outra_classe() {
+    	Endereco enderecoTeste = new Endereco();
+    	Object auditoria = new Auditoria();
+    	
+    	assertThat(enderecoTeste.equals(auditoria), is(false));
+    }
 }

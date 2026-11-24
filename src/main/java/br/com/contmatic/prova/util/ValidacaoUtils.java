@@ -37,7 +37,7 @@ public final class ValidacaoUtils {
 	}
 	
 	public static void isGreaterThanZero(String campo, Integer valor) {
-		if (!Objects.isNull(valor) && valor < 0) {
+		if (!Objects.isNull(valor) && valor <= 0) {
 			throw new IllegalArgumentException(format(O_CAMPO_NAO_PODE_SER_ZERO, campo));
 		}
 	}

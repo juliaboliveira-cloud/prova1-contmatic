@@ -58,13 +58,30 @@ public class EmpresaTest {
     }
     
     @Test
+    void nao_deve_aceitar_cnpj_menor_que_quatorze_digitos() {
+    	assertThrows(IllegalArgumentException.class, () -> empresa.setCnpj("97.817.503/0001-9"));
+    }
+    
+    
+    @Test
     void deve_guardar_a_quantidade_de_funcionarios_informada() {
         empresa.setQuantidadeFuncionarios(5);
         assertThat(empresa.getQuantidadeFuncionarios(), is(5));
     }
+    
     @Test
     void nao_deve_aceitar_quantidade_de_funcionarios_em_branco() {
         assertThrows(IllegalArgumentException.class, () -> empresa.setQuantidadeFuncionarios(null));
+    }
+    
+    @Test
+    void nao_deve_aceitar_quantidade_de_funcionarios_negativo() {
+    	assertThrows(IllegalArgumentException.class, () -> empresa.setQuantidadeFuncionarios(-3));
+    }
+    
+    @Test
+    void nao_deve_aceitar_quantidade_de_funcionarios_zero() {
+    	assertThrows(IllegalArgumentException.class, () -> empresa.setQuantidadeFuncionarios(0));
     }
 	
     @Test
@@ -82,6 +99,12 @@ public class EmpresaTest {
     @Test
     void nao_deve_aceitar_capital_social_zerado() {
         assertThrows(IllegalArgumentException.class, () -> empresa.setCapitalSocial(BigDecimal.ZERO));
+    }
+    
+    @Test
+    void nao_deve_aceitar_capital_social_negativo() {
+    	BigDecimal capitalNegativo = new BigDecimal("-66.66");
+    	assertThrows(IllegalArgumentException.class, () -> empresa.setCapitalSocial(capitalNegativo));
     }
     
     @Test
@@ -132,7 +155,7 @@ public class EmpresaTest {
     }
     
     @Test
-    void deve_guardar_o_telefone_informad() {
+    void deve_guardar_o_telefone_informado() {
     	Telefone telefone = new Telefone();
     	telefone.setDdd("11");
     	telefone.setNumeroTelefone("965324147");

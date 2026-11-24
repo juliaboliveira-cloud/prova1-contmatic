@@ -137,9 +137,32 @@ public class TelefoneTest {
 	}
 	
 	@Test
-	@Order(11)
+	@Order(12)
+	void deve_recusar_numero_de_telefone_menor_que_nove_digitos() {
+		assertThrows(IllegalArgumentException.class, () -> telefone.setNumeroTelefone("96523454"));
+	}
+	
+	@Test
+	@Order(13)
+	void deve_recusar_ddd_menor_que_dois_digitos() {
+		assertThrows(IllegalArgumentException.class, () -> telefone.setDdd("1"));
+	}
+	
+	@Test
+	@Order(14)
+	void nao_deve_aceitar_numero_de_telefone_nulo() {
+		assertThrows(IllegalArgumentException.class, () -> telefone.setNumeroTelefone(null));
+	}
+	
+	@Test
+	@Order(15)
+	void nao_deve_aceitar_ddd_nulo() {
+		assertThrows(IllegalArgumentException.class, () -> telefone.setDdd(null));
+	}
+	
+	@Test
 	@Disabled ("Teste desabilitado pois já tem uma classe que faz esse teste, não sendo mais necessário")
-	void deve_ter_oito_digitos() {
+	void deve_ter_nove_digitos() {
 		telefone.setNumeroTelefone("965234548");
 		assertThat(telefone.getNumeroTelefone().length(), is(9));
 	}
